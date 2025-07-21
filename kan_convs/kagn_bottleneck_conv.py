@@ -6,7 +6,7 @@ import torch.nn as nn
 from torch.distributions.normal import Normal
 from torch.nn.functional import conv3d, conv2d, conv1d
 
-from utils import NoiseInjection
+from conv_kan_utils import NoiseInjection
 from .moe_utils import SparseDispatcher
 from kans import GRAMLayer
 

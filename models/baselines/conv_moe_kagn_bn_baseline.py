@@ -3,7 +3,7 @@ import torch.nn as nn
 
 from kan_convs import MoEBottleNeckKAGNConv2DLayer
 from kans import KAGN
-from utils import L1
+from conv_kan_utils import L1
 
 
 class SimpleMoEConvKAGNBN(nn.Module):

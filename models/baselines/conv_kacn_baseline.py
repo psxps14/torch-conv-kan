@@ -3,7 +3,7 @@ import torch.nn as nn
 
 from kan_convs import KACNConv2DLayer
 from kans import KACN
-from utils import L1
+from conv_kan_utils import L1
 
 
 class SimpleConvKACN(nn.Module):

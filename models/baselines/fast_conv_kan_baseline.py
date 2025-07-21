@@ -3,7 +3,7 @@ import torch.nn as nn
 
 from kan_convs import FastKANConv2DLayer
 from kans import FastKAN
-from utils import L1
+from conv_kan_utils import L1
 
 
 class SimpleFastConvKAN(nn.Module):

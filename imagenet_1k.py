@@ -12,7 +12,7 @@ from torchvision.transforms.autoaugment import AutoAugmentPolicy
 
 from models import reskagnet50
 from train import Classification, train_model, FocalLoss
-from utils import GradCAMReporter
+from conv_kan_utils import GradCAMReporter
 
 
 def inverse_normalize(tensor, mean, std):

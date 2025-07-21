@@ -3,7 +3,7 @@ import torch.nn as nn
 
 from kan_convs import WavKANConv2DLayer
 from kans import WavKAN
-from utils import L1
+from conv_kan_utils import L1
 
 
 class SimpleConvWavKAN(nn.Module):
