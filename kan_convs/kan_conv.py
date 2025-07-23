@@ -97,7 +97,19 @@ class KANConvNDLayer(nn.Module):
         bases = bases.contiguous()
         bases = bases.moveaxis(-1, 2).flatten(1, 2)
         spline_output = self.spline_conv[group_index](bases)
-        x = self.prelus[group_index](self.layer_norm[group_index](base_output + spline_output))
+
+        norm_input = base_output + spline_output
+
+        if norm_input.shape[-2:] != (1, 1):
+        # Use original InstanceNorm2d when possible
+            normed = self.layer_norm[group_index](norm_input)
+        else:
+        # GroupNorm for 1x1 case
+            channels = norm_input.shape[1]
+            gn = nn.GroupNorm(num_groups=1, num_channels=channels).to(norm_input.device)
+            normed = gn(norm_input)
+
+        x = self.prelus[group_index](normed)
 
         if self.dropout is not None:
             x = self.dropout(x)
