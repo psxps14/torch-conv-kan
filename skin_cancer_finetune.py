@@ -14,7 +14,7 @@ from torchvision.transforms import v2
 
 
 from kan_peft import PEFTVGGKAGN
-from models import vggkagn, VGGKAGN
+from kan_models import vggkagn, VGGKAGN
 from train import Classification, train_model, FocalLoss
 
 

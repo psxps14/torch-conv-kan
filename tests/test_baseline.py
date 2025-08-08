@@ -3,12 +3,12 @@ import itertools
 import pytest
 import torch
 
-from models import SimpleConvKACN, EightSimpleConvKACN
-from models import SimpleConvKAGN, EightSimpleConvKAGN
-from models import SimpleConvKALN, EightSimpleConvKALN
-from models import SimpleConvKAN, EightSimpleConvKAN
-from models import SimpleConvWavKAN, EightSimpleConvWavKAN
-from models import SimpleFastConvKAN, EightSimpleFastConvKAN
+from kan_models import SimpleConvKACN, EightSimpleConvKACN
+from kan_models import SimpleConvKAGN, EightSimpleConvKAGN
+from kan_models import SimpleConvKALN, EightSimpleConvKALN
+from kan_models import SimpleConvKAN, EightSimpleConvKAN
+from kan_models import SimpleConvWavKAN, EightSimpleConvWavKAN
+from kan_models import SimpleFastConvKAN, EightSimpleFastConvKAN
 
 
 @pytest.mark.parametrize("groups, dropout, dropout_linear, l1_penalty, affine",

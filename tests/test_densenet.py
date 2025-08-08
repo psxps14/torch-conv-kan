@@ -4,9 +4,9 @@ import pytest
 import torch
 import torch.nn as nn
 
-from models import densekagnet121bn, tiny_densekagnet_bn, tiny_densekagnet_moebn, densekagnet121moebn
-from models import densekanet121, densekalnet121, densekacnet121, densekagnet121, fast_densekanet121
-from models import tiny_densekalnet, tiny_densekanet, tiny_densekagnet, tiny_densekacnet, tiny_fast_densekanet
+from kan_models import densekagnet121bn, tiny_densekagnet_bn, tiny_densekagnet_moebn, densekagnet121moebn
+from kan_models import densekanet121, densekalnet121, densekacnet121, densekagnet121, fast_densekanet121
+from kan_models import tiny_densekalnet, tiny_densekanet, tiny_densekagnet, tiny_densekacnet, tiny_fast_densekanet
 
 
 @pytest.mark.parametrize("dropout, groups, l1_decay",

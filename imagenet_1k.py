@@ -10,7 +10,7 @@ from torchinfo import summary
 from torchvision.transforms import v2
 from torchvision.transforms.autoaugment import AutoAugmentPolicy
 
-from models import reskagnet50
+from kan_models import reskagnet50
 from train import Classification, train_model, FocalLoss
 from conv_kan_utils import GradCAMReporter
 

@@ -4,7 +4,7 @@ import pytest
 import torch
 import torch.nn as nn
 
-from models import fast_vggkan, vggkan, vggkaln, vggkacn, vggkagn, moe_vggkagn, vgg_wav_kan, vggkagn_bn
+from kan_models import fast_vggkan, vggkan, vggkaln, vggkacn, vggkagn, moe_vggkagn, vgg_wav_kan, vggkagn_bn
 
 
 @pytest.mark.parametrize("dropout, dropout_linear, groups, l1_decay, vgg_type, expected_feature_shape",

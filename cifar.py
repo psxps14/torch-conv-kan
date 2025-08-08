@@ -7,7 +7,7 @@ import torch.nn as nn
 from torchinfo import summary
 
 from train import train_model
-from models.reskanet import reskalnet_18x32p
+from kan_models.reskanet import reskalnet_18x32p
 
 
 def get_data():
