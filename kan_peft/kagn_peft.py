@@ -5,7 +5,7 @@ import torch
 import torch.nn as nn
 
 from kan_convs.kagn_conv import KAGNConvNDLayer, KAGNConv1DLayer, KAGNConv2DLayer, KAGNConv3DLayer
-from models.vggkan import VGG
+from kan_models.vggkan import VGG
 
 
 class PEFTKAGNConvNDLayer(KAGNConvNDLayer):

@@ -4,7 +4,7 @@ import pytest
 import torch
 import torch.nn as nn
 
-from models import reskalnet_18x32p, reskagnet_18x32p, reskacnet_18x32p, reskanet_18x32p, fast_reskanet_18x32p
+from kan_models import reskalnet_18x32p, reskagnet_18x32p, reskacnet_18x32p, reskanet_18x32p, fast_reskanet_18x32p
 
 
 @pytest.mark.parametrize("dropout, dropout_linear, groups, l1_decay, hidden_layer_dim",

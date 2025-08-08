@@ -2,8 +2,8 @@ import pytest
 import torch
 import torch.nn as nn
 
-from models import u2kagnet, u2kacnet, u2kalnet, u2kanet, fast_u2kanet
-from models import u2kagnet_small, u2kacnet_small, u2kalnet_small, u2kanet_small, fast_u2kanet_small
+from kan_models import u2kagnet, u2kacnet, u2kalnet, u2kanet, fast_u2kanet
+from kan_models import u2kagnet_small, u2kacnet_small, u2kalnet_small, u2kanet_small, fast_u2kanet_small
 
 
 @pytest.mark.parametrize("groups", [1, 4])

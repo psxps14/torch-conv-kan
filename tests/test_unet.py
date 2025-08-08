@@ -4,7 +4,7 @@ import pytest
 import torch
 import torch.nn as nn
 
-from models import ukanet_18, ukalnet_18, fast_ukanet_18, ukacnet_18, ukagnet_18, UKAGNet
+from kan_models import ukanet_18, ukalnet_18, fast_ukanet_18, ukacnet_18, ukagnet_18, UKAGNet
 
 
 @pytest.mark.parametrize("groups", [1, 4])

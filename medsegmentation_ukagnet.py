@@ -15,7 +15,7 @@ from omegaconf import OmegaConf, open_dict
 from sklearn.model_selection import train_test_split
 from torchinfo import summary
 
-from models import UKAGNet
+from kan_models import UKAGNet
 from train import train_model, DiceLossWithBCE
 
 

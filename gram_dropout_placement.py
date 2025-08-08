@@ -8,7 +8,7 @@ from torch.nn.functional import conv2d
 from kans import KAGN
 from mnist_conv import train_and_validate
 from conv_kan_utils import L1, NoiseInjection
-from models import SimpleMoEConvKAGNBN
+from kan_models import SimpleMoEConvKAGNBN
 
 
 class KAGNConvNDLayer(nn.Module):

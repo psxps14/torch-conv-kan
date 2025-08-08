@@ -5,7 +5,7 @@ from datasets import load_dataset
 from torchinfo import summary
 from torchvision.transforms import v2
 
-from models.reskanet import moe_reskalnet_50x64p
+from kan_models.reskanet import moe_reskalnet_50x64p
 from train import Classification, train_model
 
 
