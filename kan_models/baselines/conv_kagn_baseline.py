@@ -5,6 +5,7 @@ from kan_convs import KAGNConv2DLayer
 from kans import KAGN
 from conv_kan_utils import L1
 
+from models.custom_layers import MultiBatchNorm
 
 class SimpleConvKAGN(nn.Module):
     def __init__(
@@ -101,7 +102,17 @@ class EightSimpleConvKAGN(nn.Module):
             self.output = KAGN([layer_sizes[7], num_classes], dropout=dropout_linear, first_dropout=True,
                                degree=degree_out)
 
-    def forward(self, x):
+    def _set_bn_type(self, t):
+        count = 0
+        for m in self.modules():
+            if isinstance(m, MultiBatchNorm):
+                m.t = t
+                count += 1
+
+    def forward(self, x, t=None):
+        if t is not None:
+            self._set_bn_type(t)
+
         x = self.layers(x)
         x = torch.flatten(x, 1)
         x = self.output(x)
