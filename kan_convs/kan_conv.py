@@ -131,7 +131,7 @@ class KANConvNDLayerMBN(nn.Module):
     def __init__(self, conv_class, input_dim, output_dim, spline_order, kernel_size,
                  groups=1, padding=0, stride=1, dilation=1,
                  ndim: int = 2, grid_size=5, base_activation=nn.GELU, grid_range=[-1, 1], dropout=0.0,
-                 bn_types = ['base']):
+                 bn_types=['base']):
         super(KANConvNDLayer, self).__init__()
         self.inputdim = input_dim
         self.outdim = output_dim
@@ -287,3 +287,15 @@ class KANConv1DLayer(KANConvNDLayer):
                                              ndim=1,
                                              grid_size=grid_size, base_activation=base_activation,
                                              grid_range=grid_range, dropout=dropout, **norm_kwargs)
+
+
+class KANConv2DLayerMBN(KANConvNDLayerMBN):
+    def __init__(self, input_dim, output_dim, kernel_size, spline_order=3, groups=1, padding=0, stride=1, dilation=1,
+                 grid_size=5, base_activation=nn.GELU, grid_range=[-1, 1], dropout=0.0, bn_types=['base']):
+        super(KANConv2DLayerMBN, self).__init__(nn.Conv2d,
+                                             input_dim, output_dim,
+                                             spline_order, kernel_size,
+                                             groups=groups, padding=padding, stride=stride, dilation=dilation,
+                                             ndim=2,
+                                             grid_size=grid_size, base_activation=base_activation,
+                                             grid_range=grid_range, dropout=dropout, bn_types=bn_types)

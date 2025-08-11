@@ -123,7 +123,7 @@ class KAGNConvNDLayer(nn.Module):
 class KAGNConvNDLayerMBN(nn.Module):
     def __init__(self, conv_class, conv_w_fun, input_dim, output_dim, degree, kernel_size,
                  groups=1, padding=0, stride=1, dilation=1, dropout: float = 0.0, ndim: int = 2.,
-                 bn_types =['base']):
+                 bn_types = ['base']):
         super(KAGNConvNDLayer, self).__init__()
         self.inputdim = input_dim
         self.outdim = output_dim
@@ -262,3 +262,13 @@ class KAGNConv1DLayer(KAGNConvNDLayer):
                                               degree, kernel_size,
                                               groups=groups, padding=padding, stride=stride, dilation=dilation,
                                               ndim=1, dropout=dropout, **norm_kwargs)
+
+
+class KAGNConv2DLayerMBN(KAGNConvNDLayerMBN):
+    def __init__(self, input_dim, output_dim, kernel_size, degree=3, groups=1, padding=0, stride=1, dilation=1,
+                 dropout: float = 0.0, bn_types = ['base']):
+        super(KAGNConv2DLayerMBN, self).__init__(nn.Conv2d, conv2d,
+                                              input_dim, output_dim,
+                                              degree, kernel_size,
+                                              groups=groups, padding=padding, stride=stride, dilation=dilation,
+                                              ndim=2, dropout=dropout, bn_types=bn_types)
