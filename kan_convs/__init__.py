@@ -13,10 +13,10 @@ from .kacn_conv import KACNConv1DLayer, KACNConv2DLayer, KACNConv3DLayer
 from .kagn_bottleneck_conv import BottleNeckKAGNConv1DLayer, BottleNeckKAGNConv2DLayer, BottleNeckKAGNConv3DLayer
 from .kagn_bottleneck_conv import MoEBottleNeckKAGNConv1DLayer, MoEBottleNeckKAGNConv2DLayer, \
     MoEBottleNeckKAGNConv3DLayer
-from .kagn_conv import KAGNConv1DLayer, KAGNConv2DLayer, KAGNConv3DLayer
+from .kagn_conv import KAGNConv1DLayer, KAGNConv2DLayer, KAGNConv3DLayer, KAGNConv2DLayerMBN
 from .kajn_conv import KAJNConv1DLayer, KAJNConv2DLayer, KAJNConv3DLayer
 from .kaln_conv import KALNConv1DLayer, KALNConv2DLayer, KALNConv3DLayer
-from .kan_conv import KANConv1DLayer, KANConv2DLayer, KANConv3DLayer
+from .kan_conv import KANConv1DLayer, KANConv2DLayer, KANConv3DLayer, KANConv2DLayerMBN
 from .moe_kan import MoEFastKANConv1DLayer, MoEFastKANConv2DLayer, MoEFastKANConv3DLayer
 from .moe_kan import MoEFullBottleneckKAGNConv1DLayer, MoEFullBottleneckKAGNConv2DLayer, \
     MoEFullBottleneckKAGNConv3DLayer

@@ -132,7 +132,7 @@ class KANConvNDLayerMBN(nn.Module):
                  groups=1, padding=0, stride=1, dilation=1,
                  ndim: int = 2, grid_size=5, base_activation=nn.GELU, grid_range=[-1, 1], dropout=0.0,
                  bn_types=['base']):
-        super(KANConvNDLayer, self).__init__()
+        super(KANConvNDLayerMBN, self).__init__()
         self.inputdim = input_dim
         self.outdim = output_dim
         self.spline_order = spline_order

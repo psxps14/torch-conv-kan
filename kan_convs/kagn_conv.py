@@ -124,7 +124,7 @@ class KAGNConvNDLayerMBN(nn.Module):
     def __init__(self, conv_class, conv_w_fun, input_dim, output_dim, degree, kernel_size,
                  groups=1, padding=0, stride=1, dilation=1, dropout: float = 0.0, ndim: int = 2.,
                  bn_types = ['base']):
-        super(KAGNConvNDLayer, self).__init__()
+        super(KAGNConvNDLayerMBN, self).__init__()
         self.inputdim = input_dim
         self.outdim = output_dim
         self.degree = degree
