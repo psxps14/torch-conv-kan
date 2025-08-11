@@ -124,7 +124,7 @@ class SimpleConvKAGNMBN(nn.Module):
             affine: bool = True,
             bn_types = ['base']
     ):
-        super(SimpleConvKAGN, self).__init__()
+        super(SimpleConvKAGNMBN, self).__init__()
 
         self.layers = nn.Sequential(
             KAGNConv2DLayerMBN(input_channels, layer_sizes[0], kernel_size=3, degree=degree, groups=1, padding=1, stride=1,
