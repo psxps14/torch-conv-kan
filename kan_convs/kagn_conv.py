@@ -48,8 +48,7 @@ class KAGNConvNDLayer(nn.Module):
                                                    groups=1,
                                                    bias=False) for _ in range(groups)])
 
-        bn_types = ['base', 'stn']
-        self.layer_norm = nn.ModuleList([MultiBatchNorm('2d', bn_types, output_dim // groups) for _ in range(groups)])
+        self.layer_norm = nn.ModuleList([norm_class(output_dim // groups, **norm_kwargs) for _ in range(groups)])
 
         poly_shape = (groups, output_dim // groups, (input_dim // groups) * (degree + 1)) + tuple(
             kernel_size for _ in range(ndim))
