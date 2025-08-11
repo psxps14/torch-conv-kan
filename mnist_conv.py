@@ -13,7 +13,7 @@ from tqdm import tqdm
 
 from kan_models import SimpleConvKALN, SimpleFastConvKAN, SimpleConvKAN, SimpleConv, EightSimpleConvKALN, \
     EightSimpleFastConvKAN, EightSimpleConvKAN, EightSimpleConv, SimpleConvKACN, EightSimpleConvKACN, \
-    SimpleConvKAGN, EightSimpleConvKAGN, SimpleConvWavKAN, EightSimpleConvWavKAN
+    SimpleConvKAGN, EightSimpleConvKAGN, SimpleConvWavKAN, EightSimpleConvWavKAN, SimpleConvKANMBN, EightSimpleConvKANMBN, SimpleConvKAGNMBN, EightSimpleConvKAGNMBN
 from kan_convs import KANConv2DLayer, KALNConv2DLayer, FastKANConv2DLayer, KACNConv2DLayer, KAGNConv2DLayer, WavKANConv2DLayer
 
 
@@ -285,6 +285,12 @@ def get_kan_model(num_classes, input_channels):
                          degree_out=1)
 
 
+def get_kanMBN_model(num_classes, input_channels, bn_types):
+    return SimpleConvKANMBN([8 * 4, 16 * 4, 32 * 4, 64 * 4], num_classes=num_classes, input_channels=input_channels,
+                         spline_order=3, groups=1, dropout=0.25, dropout_linear=0.5, l1_penalty=0.00000,
+                         degree_out=1, bn_types=bn_types)
+
+
 def get_kaln_model(num_classes, input_channels):
     return SimpleConvKALN([8 * 4, 16 * 4, 32 * 4, 64 * 4], num_classes=num_classes, input_channels=input_channels,
                           degree=3, groups=1, dropout=0.25, dropout_linear=0.5, l1_penalty=0.00000,
@@ -295,6 +301,12 @@ def get_kagn_model(num_classes, input_channels):
     return SimpleConvKAGN([8 * 4, 16 * 4, 32 * 4, 64 * 4], num_classes=num_classes, input_channels=input_channels,
                           degree=3, groups=4, dropout=0.25, dropout_linear=0.5, l1_penalty=0.00000,
                           degree_out=1)
+
+
+def get_kagnMBN_model(num_classes, input_channels, bn_types):
+    return SimpleConvKAGNMBN([8 * 4, 16 * 4, 32 * 4, 64 * 4], num_classes=num_classes, input_channels=input_channels,
+                          degree=3, groups=4, dropout=0.25, dropout_linear=0.5, l1_penalty=0.00000,
+                          degree_out=1, bn_types=bn_types)
 
 
 def get_kacn_model(num_classes, input_channels):
@@ -326,6 +338,13 @@ def get_8kan_model(num_classes, input_channels):
                               degree_out=1)
 
 
+def get_8kanMBN_model(num_classes, input_channels, bn_types):
+    return EightSimpleConvKANMBN([8 * 2, 16 * 2, 32 * 2, 64 * 2, 128 * 2, 128 * 2, 128 * 4, 128 * 4],
+                              num_classes=num_classes, input_channels=input_channels,
+                              spline_order=3, groups=1, dropout=0.25, dropout_linear=0.5, l1_penalty=0.000000,
+                              degree_out=1, bn_types=bn_types)
+
+
 def get_8kaln_model(num_classes, input_channels):
     return EightSimpleConvKALN([8 * 2, 16 * 2, 32 * 2, 64 * 2, 128 * 2, 128 * 2, 128 * 4, 128 * 4],
                                num_classes=num_classes, input_channels=input_channels,
@@ -338,6 +357,13 @@ def get_8kagn_model(num_classes, input_channels):
                                num_classes=num_classes, input_channels=input_channels,
                                degree=3, groups=1, dropout=0.25, dropout_linear=0.5, l1_penalty=0.00000,
                                degree_out=1)
+
+
+def get_8kagnMBN_model(num_classes, input_channels, bn_types):
+    return EightSimpleConvKAGNMBN([8 * 2, 16 * 2, 32 * 2, 64 * 2, 128 * 2, 128 * 2, 128 * 4, 128 * 4],
+                               num_classes=num_classes, input_channels=input_channels,
+                               degree=3, groups=1, dropout=0.25, dropout_linear=0.5, l1_penalty=0.00000,
+                               degree_out=1, bn_types=bn_types)
 
 
 def get_8wavkan_model(num_classes, input_channels):

@@ -1,9 +1,9 @@
 from .automodel import AutoKAN, TinyAutoKAGN
 from .baselines.conv_baseline import SimpleConv, EightSimpleConv
 from .baselines.conv_kacn_baseline import SimpleConvKACN, EightSimpleConvKACN
-from .baselines.conv_kagn_baseline import SimpleConvKAGN, EightSimpleConvKAGN
+from .baselines.conv_kagn_baseline import SimpleConvKAGN, EightSimpleConvKAGN, SimpleConvKAGNMBN, EightSimpleConvKAGNMBN
 from .baselines.conv_kaln_baseline import SimpleConvKALN, EightSimpleConvKALN
-from .baselines.conv_kan_baseline import SimpleConvKAN, EightSimpleConvKAN
+from .baselines.conv_kan_baseline import SimpleConvKAN, EightSimpleConvKAN, SimpleConvKANMBN, EightSimpleConvKANMBN
 from .baselines.conv_moe_kagn_bn_baseline import EightSimpleMoEConvKAGNBN, SimpleMoEConvKAGNBN
 from .baselines.conv_wavkan_baseline import SimpleConvWavKAN, EightSimpleConvWavKAN
 from .baselines.fast_conv_kan_baseline import SimpleFastConvKAN, EightSimpleFastConvKAN
