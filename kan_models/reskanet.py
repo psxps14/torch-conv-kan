@@ -226,7 +226,7 @@ class BottleneckKAGNBasicBlockMBN(BasicBlockTemplate):
         conv3x3x3_fun = partial(bottleneck_kagn_conv3x3MBN, degree=degree, dropout=dropout, l1_decay=l1_decay,
                                 bn_types = bn_types)
 
-        super(BottleneckKAGNBasicBlock, self).__init__(conv1x1x1_fun,
+        super(BottleneckKAGNBasicBlockMBN, self).__init__(conv1x1x1_fun,
                                                        conv3x3x3_fun,
                                                        inplanes=inplanes,
                                                        planes=planes,
@@ -874,7 +874,7 @@ class ResKANetMBN(nn.Module):
         else:
             fc_layers = [64 * width_scale * block.expansion, num_classes]
 
-        if block in (BottleneckKAGNBasicBlockMBN):
+        if block == BottleneckKAGNBasicBlockMBN:
             self.conv1 = BottleNeckKAGNConv2DLayerMBN(input_channels, self.inplanes, kernel_size=fcnv_kernel_size,
                                                    stride=fcnv_stride, padding=fcnv_padding,
                                                    bn_types=bn_types)
@@ -912,7 +912,7 @@ class ResKANetMBN(nn.Module):
             stride = 1
         if stride != 1 or self.inplanes != planes * block.expansion:
 
-            if block in (BottleneckKAGNBasicBlockMBN):
+            if block == BottleneckKAGNBasicBlockMBN:
                 conv1x1 = partial(bottleneck_kagn_conv1x1MBN)
             else:
                 raise TypeError(f"Block {type(block)} is not supported")
