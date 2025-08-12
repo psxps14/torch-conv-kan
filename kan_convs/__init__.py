@@ -10,7 +10,7 @@ from .attention_conv import RoPEBottleNeckSelfKAGNtention1D, RoPEBottleNeckSelfK
 from .fast_kan_conv import FastKANConv1DLayer, FastKANConv2DLayer, FastKANConv3DLayer
 from .kabn_conv import KABNConv1DLayer, KABNConv2DLayer, KABNConv3DLayer
 from .kacn_conv import KACNConv1DLayer, KACNConv2DLayer, KACNConv3DLayer
-from .kagn_bottleneck_conv import BottleNeckKAGNConv1DLayer, BottleNeckKAGNConv2DLayer, BottleNeckKAGNConv3DLayer
+from .kagn_bottleneck_conv import BottleNeckKAGNConv1DLayer, BottleNeckKAGNConv2DLayer, BottleNeckKAGNConv3DLayer, BottleNeckKAGNConv2DLayerMBN
 from .kagn_bottleneck_conv import MoEBottleNeckKAGNConv1DLayer, MoEBottleNeckKAGNConv2DLayer, \
     MoEBottleNeckKAGNConv3DLayer
 from .kagn_conv import KAGNConv1DLayer, KAGNConv2DLayer, KAGNConv3DLayer, KAGNConv2DLayerMBN

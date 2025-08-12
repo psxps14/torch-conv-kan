@@ -4,7 +4,7 @@ import torch.nn as nn
 
 from kan_convs import KALNConv2DLayer, KANConv2DLayer, KACNConv2DLayer, FastKANConv2DLayer, KAGNConv2DLayer, \
     WavKANConv2DLayer
-from kan_convs import MoEKALNConv2DLayer, MoEKAGNConv2DLayer, BottleNeckKAGNConv2DLayer
+from kan_convs import MoEKALNConv2DLayer, MoEKAGNConv2DLayer, BottleNeckKAGNConv2DLayer, BottleNeckKAGNConv2DLayerMBN
 from kan_convs import SelfKAGNtention2D, BottleNeckSelfKAGNtention2D
 from kan_convs import MoEBottleNeckKAGNConv2DLayer
 from conv_kan_utils import L1
@@ -159,6 +159,28 @@ def bottleneck_kagn_conv3x3(in_planes: int, out_planes: int, degree: int = 3, gr
     return conv
 
 
+def bottleneck_kagn_conv3x3MBN(in_planes: int, out_planes: int, degree: int = 3, groups: int = 1, stride: int = 1,
+                            dilation: int = 1, dropout: float = 0.0, l1_decay: float = 0.0,
+                            dim_reduction: float = 8, bn_types = ['base']) -> BottleNeckKAGNConv2DLayer:
+    """3x3 convolution with padding"""
+    conv = BottleNeckKAGNConv2DLayerMBN(
+        in_planes,
+        out_planes,
+        degree=degree,
+        kernel_size=3,
+        stride=stride,
+        padding=dilation,
+        dilation=dilation,
+        groups=groups,
+        dropout=dropout,
+        dim_reduction=dim_reduction,
+        bn_types=bn_types
+    )
+    if l1_decay > 0:
+        conv = L1(conv, l1_decay)
+    return conv
+
+
 def moe_bottleneck_kagn_conv3x3(in_planes: int, out_planes: int, degree: int = 3, groups: int = 1, stride: int = 1,
                             dilation: int = 1, dropout: float = 0.0, norm_layer=nn.BatchNorm2d,
                             l1_decay: float = 0.0, dim_reduction: float = 8,
@@ -194,6 +216,17 @@ def bottleneck_kagn_conv1x1(in_planes: int, out_planes: int, degree: int = 3, st
     conv = BottleNeckKAGNConv2DLayer(in_planes, out_planes, degree=degree,
                                      kernel_size=1,
                                      stride=stride, dropout=dropout, norm_layer=norm_layer, **norm_kwargs)
+    if l1_decay > 0:
+        conv = L1(conv, l1_decay)
+    return conv
+
+
+def bottleneck_kagn_conv1x1MBN(in_planes: int, out_planes: int, degree: int = 3, stride: int = 1,
+                            dropout: float = 0.0, l1_decay: float = 0.0, bn_types = ['base']) -> KAGNConv2DLayer:
+    """1x1 convolution"""
+    conv = BottleNeckKAGNConv2DLayerMBN(in_planes, out_planes, degree=degree,
+                                     kernel_size=1,
+                                     stride=stride, dropout=dropout, bn_types=bn_types)
     if l1_decay > 0:
         conv = L1(conv, l1_decay)
     return conv

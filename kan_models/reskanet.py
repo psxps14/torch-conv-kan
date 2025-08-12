@@ -7,9 +7,9 @@ from torch import Tensor, flatten
 from kan_convs import KALNConv2DLayer, KANConv2DLayer, KACNConv2DLayer, FastKANConv2DLayer, KAGNConv2DLayer, \
     BottleNeckKAGNConv2DLayer
 from .model_utils import kan_conv1x1, kagn_conv1x1, kacn_conv1x1, kaln_conv1x1, fast_kan_conv1x1, \
-    bottleneck_kagn_conv1x1
+    bottleneck_kagn_conv1x1, bottleneck_kagn_conv1x1MBN
 from .model_utils import kan_conv3x3, kagn_conv3x3, kacn_conv3x3, kaln_conv3x3, fast_kan_conv3x3, moe_kaln_conv3x3, \
-    bottleneck_kagn_conv3x3
+    bottleneck_kagn_conv3x3, bottleneck_kagn_conv3x3MBN
 from .model_utils import moe_bottleneck_kagn_conv3x3
 
 
@@ -194,6 +194,35 @@ class BottleneckKAGNBasicBlock(BasicBlockTemplate):
                                 norm_layer=norm_layer, **norm_kwargs)
         conv3x3x3_fun = partial(bottleneck_kagn_conv3x3, degree=degree, dropout=dropout, l1_decay=l1_decay,
                                 norm_layer=norm_layer, **norm_kwargs)
+
+        super(BottleneckKAGNBasicBlock, self).__init__(conv1x1x1_fun,
+                                                       conv3x3x3_fun,
+                                                       inplanes=inplanes,
+                                                       planes=planes,
+                                                       stride=stride,
+                                                       downsample=downsample,
+                                                       groups=groups,
+                                                       base_width=base_width,
+                                                       dilation=dilation)
+
+
+class BottleneckKAGNBasicBlockMBN(BasicBlockTemplate):
+    def __init__(self,
+                 inplanes: int,
+                 planes: int,
+                 degree: int = 3,
+                 stride: int = 1,
+                 downsample: Optional[nn.Module] = None,
+                 groups: int = 1,
+                 base_width: int = 64,
+                 dilation: int = 1,
+                 dropout: float = 0.0,
+                 l1_decay: float = 0.0,
+                 bn_types = ['base']):
+        conv1x1x1_fun = partial(bottleneck_kagn_conv1x1MBN, degree=degree, dropout=dropout, l1_decay=l1_decay,
+                               bn_types = bn_types)
+        conv3x3x3_fun = partial(bottleneck_kagn_conv3x3MBN, degree=degree, dropout=dropout, l1_decay=l1_decay,
+                                bn_types = bn_types)
 
         super(BottleneckKAGNBasicBlock, self).__init__(conv1x1x1_fun,
                                                        conv3x3x3_fun,
