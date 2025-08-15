@@ -367,7 +367,8 @@ class DenseKANet(nn.Module):
             self,
             block_class: Type[Union[_KANDenseBlock, _FastKANDenseBlock,
                                     _KALNDenseBlock, _KACNDenseBlock, _KAGNDenseBlock,
-                                    _BottleNeckKAGNDenseBlock, _MoEBottleNeckKAGNDenseBlock]],
+                                    _BottleNeckKAGNDenseBlock, _MoEBottleNeckKAGNDenseBlock,
+                                    _BottleNeckKAGNDenseBlockMBN]],
             use_first_maxpool: bool = True,
             mp_kernel_size: int = 3, mp_stride: int = 2, mp_padding: int = 1,
             fcnv_kernel_size: int = 7, fcnv_stride: int = 2, fcnv_padding: int = 3,
@@ -380,6 +381,7 @@ class DenseKANet(nn.Module):
             dropout_linear: float = 0,
             num_classes: int = 1000,
             memory_efficient: bool = False,
+            bn_types = ['base'],
             **kan_kwargs
     ) -> None:
 
@@ -416,6 +418,10 @@ class DenseKANet(nn.Module):
         elif block_class in (_KACNDenseBlock,):
             conv1 = KACNConv2DLayer(input_channels, num_init_features, kernel_size=fcnv_kernel_size,
                                     stride=fcnv_stride, padding=fcnv_padding, **kan_kwargs_clean)
+        elif block_class == _BottleNeckKAGNDenseBlockMBN:
+            BottleNeckKAGNConv2DLayerMBN(input_channels, num_init_features, kernel_size=fcnv_kernel_size,
+                                         stride=fcnv_stride, padding=fcnv_padding, bn_types=bn_types,
+                                         **kan_kwargs_clean)
         else:
             raise TypeError(f"Block {type(block_class)} is not supported")
 
@@ -866,6 +872,18 @@ def densekagnet121bn(input_channels, num_classes, groups: int = 1, degree: int =
                       groups=groups, degree=degree, affine=affine,
                       dropout=dropout, l1_decay=l1_decay, use_first_maxpool=use_first_maxpool,
                       norm_layer=norm_layer, dropout_linear=dropout_linear
+                      )
+
+
+def densekagnet121bnMBN(input_channels, num_classes, groups: int = 1, degree: int = 3,
+                     dropout: float = 0.0, dropout_linear: float = 0.0, l1_decay: float = 0.0, use_first_maxpool: bool = True,
+                     growth_rate: int = 32, num_init_features: int = 64, affine: bool = True,
+                     bn_types =['base']) -> DenseKANet:
+    return DenseKANet(_BottleNeckKAGNDenseBlockMBN, input_channels=input_channels, num_classes=num_classes,
+                      growth_rate=growth_rate, block_config=(6, 12, 24, 16), num_init_features=num_init_features,
+                      groups=groups, degree=degree, affine=affine,
+                      dropout=dropout, l1_decay=l1_decay, use_first_maxpool=use_first_maxpool,
+                      bn_types=bn_types, dropout_linear=dropout_linear
                       )
 
 
