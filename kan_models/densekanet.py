@@ -13,7 +13,7 @@ from kan_convs import KALNConv2DLayer, KANConv2DLayer, KACNConv2DLayer, FastKANC
 from kans import KAN, KALN, KAGN, KACN, FastKAN, BottleNeckKAGN
 from .model_utils import kan_conv1x1, fast_kan_conv1x1, kaln_conv1x1, kacn_conv1x1, kan_conv3x3, kaln_conv3x3, \
     fast_kan_conv3x3, kacn_conv3x3, kagn_conv1x1, kagn_conv3x3, bottleneck_kagn_conv1x1, bottleneck_kagn_conv3x3, \
-    moe_bottleneck_kagn_conv3x3
+    moe_bottleneck_kagn_conv3x3, bottleneck_kagn_conv1x1MBN, bottleneck_kagn_conv3x3MBN
 
 
 class _DenseLayer(nn.Module):
@@ -269,6 +269,32 @@ class _BottleNeckKAGNDenseBlock(_DenseBlock):
         conv3x3x3_fun = partial(bottleneck_kagn_conv3x3, degree=degree, l1_decay=l1_decay, groups=groups, **norm_kwargs)
 
         super(_BottleNeckKAGNDenseBlock, self).__init__(conv1x1x1_fun,
+                                                        conv3x3x3_fun,
+                                                        num_layers,
+                                                        num_input_features,
+                                                        bn_size,
+                                                        growth_rate,
+                                                        dropout,
+                                                        memory_efficient=memory_efficient)
+
+
+class _BottleNeckKAGNDenseBlockMBN(_DenseBlock):
+    def __init__(self,
+                 num_layers: int,
+                 num_input_features: int,
+                 bn_size: int,
+                 growth_rate: int,
+                 dropout: float = 0.0,
+                 memory_efficient: bool = False,
+                 groups: int = 1,
+                 l1_decay: float = 0.0,
+                 degree: int = 3,
+                 bn_types = ['base']
+                 ):
+        conv1x1x1_fun = partial(bottleneck_kagn_conv1x1MBN, degree=degree, l1_decay=l1_decay, bn_types = bn_types)
+        conv3x3x3_fun = partial(bottleneck_kagn_conv3x3MBN, degree=degree, l1_decay=l1_decay, groups=groups, bn_types = bn_types)
+
+        super(_BottleNeckKAGNDenseBlockMBN, self).__init__(conv1x1x1_fun,
                                                         conv3x3x3_fun,
                                                         num_layers,
                                                         num_input_features,
