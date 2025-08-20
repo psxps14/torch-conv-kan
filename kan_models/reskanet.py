@@ -1639,6 +1639,26 @@ def reskagnetbn_34x32p(input_channels, num_classes, groups: int = 1, degree: int
                     )
 
 
+def reskagnetbnMBN_34x32p(input_channels, num_classes, groups: int = 1, degree: int = 3, width_scale: int = 1,
+                       hidden_layer_dim=None, dropout: float = 0.0, l1_decay: float = 0.0,
+                       dropout_linear: float = 0.25, affine: bool = False, bn_types=['base']):
+    return ResKANetMBN(BottleneckKAGNBasicBlockMBN, [3, 4, 6, 3],
+                    input_channels=input_channels,
+                    use_first_maxpool=False,
+                    fcnv_kernel_size=3, fcnv_stride=1, fcnv_padding=1,
+                    num_classes=num_classes,
+                    groups=groups,
+                    width_per_group=64,
+                    degree=degree,
+                    width_scale=width_scale, hidden_layer_dim=hidden_layer_dim,
+                    dropout=dropout,
+                    dropout_linear=dropout_linear,
+                    l1_decay=l1_decay,
+                    affine=affine,
+                    bn_types=bn_types
+                    )
+
+
 def reskagnetbn_moe_34x32p(input_channels, num_classes, groups: int = 1, degree: int = 3, width_scale: int = 1,
                            hidden_layer_dim=None, dropout: float = 0.0, l1_decay: float = 0.0,
                            dropout_linear: float = 0.25, affine: bool = False,
