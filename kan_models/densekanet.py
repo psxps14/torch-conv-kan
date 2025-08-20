@@ -368,8 +368,7 @@ class DenseKANet(nn.Module):
             self,
             block_class: Type[Union[_KANDenseBlock, _FastKANDenseBlock,
                                     _KALNDenseBlock, _KACNDenseBlock, _KAGNDenseBlock,
-                                    _BottleNeckKAGNDenseBlock, _MoEBottleNeckKAGNDenseBlock,
-                                    _BottleNeckKAGNDenseBlockMBN]],
+                                    _BottleNeckKAGNDenseBlock, _MoEBottleNeckKAGNDenseBlock]],
             use_first_maxpool: bool = True,
             mp_kernel_size: int = 3, mp_stride: int = 2, mp_padding: int = 1,
             fcnv_kernel_size: int = 7, fcnv_stride: int = 2, fcnv_padding: int = 3,
@@ -382,7 +381,6 @@ class DenseKANet(nn.Module):
             dropout_linear: float = 0,
             num_classes: int = 1000,
             memory_efficient: bool = False,
-            bn_types = ['base'],
             **kan_kwargs
     ) -> None:
 
@@ -419,10 +417,6 @@ class DenseKANet(nn.Module):
         elif block_class in (_KACNDenseBlock,):
             conv1 = KACNConv2DLayer(input_channels, num_init_features, kernel_size=fcnv_kernel_size,
                                     stride=fcnv_stride, padding=fcnv_padding, **kan_kwargs_clean)
-        elif block_class == _BottleNeckKAGNDenseBlockMBN:
-            BottleNeckKAGNConv2DLayerMBN(input_channels, num_init_features, kernel_size=fcnv_kernel_size,
-                                         stride=fcnv_stride, padding=fcnv_padding, bn_types=bn_types,
-                                         **kan_kwargs_clean)
         else:
             raise TypeError(f"Block {type(block_class)} is not supported")
 
@@ -506,7 +500,7 @@ class TinyDenseKANet(nn.Module):
             self,
             block_class: Type[Union[_KANDenseBlock, _FastKANDenseBlock,
                                     _KALNDenseBlock, _KACNDenseBlock, _KAGNDenseBlock, _BottleNeckKAGNDenseBlock,
-                                    _MoEBottleNeckKAGNDenseBlock, _BottleNeckKAGNDenseBlockMBN]],
+                                    _MoEBottleNeckKAGNDenseBlock]],
             fcnv_kernel_size: int = 5, fcnv_stride: int = 2, fcnv_padding: int = 2,
             input_channels: int = 3,
             growth_rate: int = 32,
@@ -517,7 +511,6 @@ class TinyDenseKANet(nn.Module):
             dropout_linear: float = 0,
             num_classes: int = 1000,
             memory_efficient: bool = False,
-            bn_types = ['base'],
             **kan_kwargs
     ) -> None:
 
@@ -555,10 +548,6 @@ class TinyDenseKANet(nn.Module):
         elif block_class in (_KACNDenseBlock,):
             conv1 = KACNConv2DLayer(input_channels, num_init_features, kernel_size=fcnv_kernel_size,
                                     stride=fcnv_stride, padding=fcnv_padding, **kan_kwargs_clean)
-        elif block_class == _BottleNeckKAGNDenseBlockMBN:
-            conv1 = BottleNeckKAGNConv2DLayerMBN(input_channels, num_init_features, kernel_size=fcnv_kernel_size,
-                                              stride=fcnv_stride, padding=fcnv_padding, bn_types=bn_types,
-                                              **kan_kwargs_clean)
         else:
             raise TypeError(f"Block {type(block_class)} is not supported")
         self.layers_order = ["conv0", ]
@@ -600,8 +589,7 @@ class TinyDenseKANet(nn.Module):
             self.classifier = KALN([num_features, num_classes], **kan_kwargs_clean)
         elif block_class in (_KAGNDenseBlock,):
             self.classifier = KAGN([num_features, num_classes], **kan_kwargs_clean)
-        elif block_class in (_BottleNeckKAGNDenseBlock, _MoEBottleNeckKAGNDenseBlock,
-                             _BottleNeckKAGNDenseBlockMBN):
+        elif block_class in (_BottleNeckKAGNDenseBlock, _MoEBottleNeckKAGNDenseBlock):
             self.classifier = BottleNeckKAGN([num_features, num_classes], **kan_kwargs_clean)
         elif block_class in (_KACNDenseBlock,):
             self.classifier = KACN([num_features, num_classes], **kan_kwargs_clean)
