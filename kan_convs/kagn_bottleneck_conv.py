@@ -760,7 +760,7 @@ class BottleNeckKAGNConvNDLayerMBN(nn.Module):
 
 class BottleNeckKAGNConv2DLayerMBN(BottleNeckKAGNConvNDLayerMBN):
     def __init__(self, input_dim, output_dim, kernel_size, degree=3, groups=1, padding=0, stride=1, dilation=1,
-                 dropout: float = 0.0, dim_reduction: float = 4, bn_types = ['base']):
+                 dropout: float = 0.0, dim_reduction: float = 4, bn_types = ['base'], **norm_kwargs):
         super(BottleNeckKAGNConv2DLayerMBN, self).__init__(nn.Conv2d, conv2d,
                                                         input_dim, output_dim,
                                                         degree, kernel_size, dim_reduction=dim_reduction,

@@ -289,7 +289,8 @@ class _BottleNeckKAGNDenseBlockMBN(_DenseBlock):
                  groups: int = 1,
                  l1_decay: float = 0.0,
                  degree: int = 3,
-                 bn_types = ['base']
+                 bn_types = ['base'],
+                 **norm_kwargs
                  ):
         conv1x1x1_fun = partial(bottleneck_kagn_conv1x1MBN, degree=degree, l1_decay=l1_decay, bn_types = bn_types)
         conv3x3x3_fun = partial(bottleneck_kagn_conv3x3MBN, degree=degree, l1_decay=l1_decay, groups=groups, bn_types = bn_types)
