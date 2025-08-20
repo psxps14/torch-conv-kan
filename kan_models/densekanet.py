@@ -343,7 +343,6 @@ class _Transition(nn.Sequential):
     # switch to KAN Convs?
     def __init__(self, num_input_features: int, num_output_features: int) -> None:
         super().__init__()
-
         self.norm = nn.BatchNorm2d(num_input_features)
         self.relu = nn.SELU()
         self.conv = nn.Conv2d(num_input_features, num_output_features, kernel_size=1, stride=1, bias=False)
@@ -701,7 +700,7 @@ class TinyDenseKANetMBN(nn.Module):
             self.features.add_module("denseblock%d" % (i + 1), block)
             self.layers_order.append("denseblock%d" % (i + 1))
             num_features = num_features + num_layers * growth_rate
-            trans = _TransitionMBN(num_input_features=num_features, num_output_features=num_features // 2)
+            trans = _TransitionMBN(num_input_features=num_features, num_output_features=num_features // 2, bn_types=bn_types)
             self.features.add_module("transition%d" % (i + 1), trans)
             self.layers_order.append("transition%d" % (i + 1))
             num_features = num_features // 2
