@@ -350,6 +350,17 @@ class _Transition(nn.Sequential):
         self.pool = nn.AvgPool2d(kernel_size=2, stride=2)
 
 
+class _TransitionMBN(nn.Sequential):
+    # switch to KAN Convs?
+    def __init__(self, num_input_features: int, num_output_features: int, bn_types = ['base']) -> None:
+        super().__init__()
+
+        self.norm = MultiBatchNorm('2d', bn_types, num_input_features)
+        self.relu = nn.SELU()
+        self.conv = nn.Conv2d(num_input_features, num_output_features, kernel_size=1, stride=1, bias=False)
+        self.pool = nn.AvgPool2d(kernel_size=2, stride=2)
+
+
 class DenseKANet(nn.Module):
     r"""Densenet-BC model class, based on
     `"Densely Connected Convolutional Networks" <https://arxiv.org/pdf/1608.06993.pdf>`_.
@@ -690,7 +701,7 @@ class TinyDenseKANetMBN(nn.Module):
             self.features.add_module("denseblock%d" % (i + 1), block)
             self.layers_order.append("denseblock%d" % (i + 1))
             num_features = num_features + num_layers * growth_rate
-            trans = _Transition(num_input_features=num_features, num_output_features=num_features // 2)
+            trans = _TransitionMBN(num_input_features=num_features, num_output_features=num_features // 2)
             self.features.add_module("transition%d" % (i + 1), trans)
             self.layers_order.append("transition%d" % (i + 1))
             num_features = num_features // 2
