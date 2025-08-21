@@ -492,6 +492,126 @@ class DenseKANet(nn.Module):
         return out
 
 
+class DenseKANetMBN(nn.Module):
+    r"""Densenet-BC model class, based on
+    `"Densely Connected Convolutional Networks" <https://arxiv.org/pdf/1608.06993.pdf>`_.
+
+    Args:
+        growth_rate (int) - how many filters to add each layer (`k` in paper)
+        block_config (list of 4 ints) - how many layers in each pooling block
+        num_init_features (int) - the number of filters to learn in the first convolution layer
+        bn_size (int) - multiplicative factor for number of bottle neck layers
+          (i.e. bn_size * k features in the bottleneck layer)
+        drop_rate (float) - dropout rate after each dense layer
+        num_classes (int) - number of classification classes
+        memory_efficient (bool) - If True, uses checkpointing. Much more memory efficient,
+          but slower. Default: *False*. See `"paper" <https://arxiv.org/pdf/1707.06990.pdf>`_.
+    """
+
+    def __init__(
+            self,
+            block_class: Type[Union[_BottleNeckKAGNDenseBlockMBN,]],
+            use_first_maxpool: bool = True,
+            mp_kernel_size: int = 3, mp_stride: int = 2, mp_padding: int = 1,
+            fcnv_kernel_size: int = 7, fcnv_stride: int = 2, fcnv_padding: int = 3,
+            input_channels: int = 3,
+            growth_rate: int = 32,
+            block_config: Tuple[int, int, int, int] = (6, 12, 24, 16),
+            num_init_features: int = 64,
+            bn_size: int = 4,
+            dropout: float = 0,
+            dropout_linear: float = 0,
+            num_classes: int = 1000,
+            memory_efficient: bool = False,
+            bn_types = ['base'],
+            **kan_kwargs
+    ) -> None:
+
+        super().__init__()
+
+        kan_kwargs_clean = kan_kwargs.copy()
+        kan_kwargs_clean.pop('l1_decay', None)
+        kan_kwargs_clean.pop('dropout', None)
+        kan_kwargs_clean.pop('groups', None)
+        kan_kwargs_clean.pop('num_experts', None)
+        kan_kwargs_clean.pop('k', None)
+        kan_kwargs_clean.pop('noisy_gating', None)
+
+        self.is_moe = False
+        if block_class in (_BottleNeckKAGNDenseBlockMBN,):
+            conv1 = BottleNeckKAGNConv2DLayerMBN(input_channels, num_init_features, kernel_size=fcnv_kernel_size,
+                                              stride=fcnv_stride, padding=fcnv_padding, bn_types=bn_types, **kan_kwargs_clean)
+        else:
+            raise TypeError(f"Block {type(block_class)} is not supported")
+
+        # First convolution
+
+        self.layers_order = ["conv0", ]
+        self.features = nn.ModuleDict()
+        self.features.add_module("conv0", conv1)
+        if use_first_maxpool:
+            self.features.add_module(
+                "pool0", nn.MaxPool2d(kernel_size=mp_kernel_size, stride=mp_stride, padding=mp_padding))
+            self.layers_order.append('pool0')
+
+        # Each denseblock
+        num_features = num_init_features
+        for i, num_layers in enumerate(block_config):
+            block = block_class(
+                num_layers=num_layers,
+                num_input_features=num_features,
+                bn_size=bn_size,
+                growth_rate=growth_rate,
+                dropout=dropout,
+                memory_efficient=memory_efficient,
+                bn_types=bn_types,
+                **kan_kwargs
+            )
+            self.features.add_module("denseblock%d" % (i + 1), block)
+            self.layers_order.append("denseblock%d" % (i + 1))
+            num_features = num_features + num_layers * growth_rate
+            if i != len(block_config) - 1:
+                trans = _TransitionMBN(num_input_features=num_features, num_output_features=num_features // 2, bn_types=bn_types)
+                self.features.add_module("transition%d" % (i + 1), trans)
+
+                self.layers_order.append("transition%d" % (i + 1))
+                num_features = num_features // 2
+
+        # # Final batch norm
+        # self.features.add_module("norm5", nn.BatchNorm2d(num_features))
+
+        # Linear layer
+        self.dropout_lin = None
+        if dropout_linear > 0:
+            self.dropout_lin = nn.Dropout(p=dropout_linear)
+        self.classifier = nn.Linear(num_features, num_classes)
+
+    def _set_bn_type(self, t):
+        count = 0
+        for m in self.modules():
+            if isinstance(m, MultiBatchNorm):
+                m.t = t
+                count += 1
+
+    def forward(self, x: Tensor, t=None, **kwargs) -> Union[Tensor, tuple]:
+        moe_loss = 0.
+        for layer_name in self.layers_order:
+            if self.is_moe and 'denseblock' in layer_name:
+                x, _moe_loss = self.features[layer_name](x, **kwargs)
+                moe_loss += _moe_loss
+            else:
+                x = self.features[layer_name](x)
+
+        out = F.adaptive_avg_pool2d(x, (1, 1))
+        out = torch.flatten(out, 1)
+        if self.dropout_lin is not None:
+            out = self.dropout_lin(out)
+        out = self.classifier(out)
+        if self.is_moe:
+            return out, moe_loss
+        return out
+
+
 class TinyDenseKANet(nn.Module):
     r"""Densenet model class, based on
     `"Densely Connected Convolutional Networks" <https://arxiv.org/pdf/1608.06993.pdf>` and https://arxiv.org/pdf/1904.10429v2.
@@ -995,7 +1115,7 @@ def densekagnet121bnMBN(input_channels, num_classes, groups: int = 1, degree: in
                      dropout: float = 0.0, dropout_linear: float = 0.0, l1_decay: float = 0.0, use_first_maxpool: bool = True,
                      growth_rate: int = 32, num_init_features: int = 64, affine: bool = True,
                      bn_types =['base']) -> DenseKANet:
-    return DenseKANet(_BottleNeckKAGNDenseBlockMBN, input_channels=input_channels, num_classes=num_classes,
+    return DenseKANetMBN(_BottleNeckKAGNDenseBlockMBN, input_channels=input_channels, num_classes=num_classes,
                       growth_rate=growth_rate, block_config=(6, 12, 24, 16), num_init_features=num_init_features,
                       groups=groups, degree=degree, affine=affine,
                       dropout=dropout, l1_decay=l1_decay, use_first_maxpool=use_first_maxpool,
